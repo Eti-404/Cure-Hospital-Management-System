@@ -1,0 +1,27 @@
+{
+  "name": "niramoy-backend",
+  "version": "1.0.0",
+  "description": "\"নিরাময়\" (Niramoy) Smart Hospital Management System - Backend API",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "keywords": [
+    "hospital-management",
+    "express",
+    "supabase",
+    "bangladesh",
+    "niramoy"
+  ],
+  "author": "Eti-404",
+  "license": "MIT"
+}

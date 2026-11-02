@@ -188,7 +188,7 @@ CREATE INDEX idx_medicines_category ON medicines(category);
 -- ============================================================================
 -- 4. REALISTIC SEED DATA (Bangla & English Context)
 -- Default test password for all seeded users: 'Password@123'
--- Bcrypt Hash: $2a$10$wT0lQnvyE6B1e8z.QZJmve5V62T43E2R.G3p7p19m9q9wK7oH8Zq.
+-- Bcrypt Hash: $2a$10$16Jl2UzLToO/BOvANO7J7u/2n5mFbKrteJHqB2/5yxN9CRJE9JHeO
 -- ============================================================================
 
 -- 4.1 USERS & PROFILES SEEDING
@@ -200,7 +200,7 @@ VALUES (
     '01700000001',
     '1980000000001',
     'admin',
-    '$2a$10$wT0lQnvyE6B1e8z.QZJmve5V62T43E2R.G3p7p19m9q9wK7oH8Zq.'
+    '$2a$10$16Jl2UzLToO/BOvANO7J7u/2n5mFbKrteJHqB2/5yxN9CRJE9JHeO'
 );
 
 -- B) Dispensary / Pharmacy Officer
@@ -211,7 +211,7 @@ VALUES (
     '01700000002',
     '1985000000002',
     'pharmacy',
-    '$2a$10$wT0lQnvyE6B1e8z.QZJmve5V62T43E2R.G3p7p19m9q9wK7oH8Zq.'
+    '$2a$10$16Jl2UzLToO/BOvANO7J7u/2n5mFbKrteJHqB2/5yxN9CRJE9JHeO'
 );
 
 -- C) 3 Doctors (Medicine, Pediatrics, Cardiology)
@@ -223,7 +223,7 @@ VALUES
     '01711111111',
     '1982111111111',
     'doctor',
-    '$2a$10$wT0lQnvyE6B1e8z.QZJmve5V62T43E2R.G3p7p19m9q9wK7oH8Zq.'
+    '$2a$10$16Jl2UzLToO/BOvANO7J7u/2n5mFbKrteJHqB2/5yxN9CRJE9JHeO'
 ),
 (
     'd0000000-0000-0000-0000-000000000002',
@@ -231,7 +231,7 @@ VALUES
     '01722222222',
     '1986222222222',
     'doctor',
-    '$2a$10$wT0lQnvyE6B1e8z.QZJmve5V62T43E2R.G3p7p19m9q9wK7oH8Zq.'
+    '$2a$10$16Jl2UzLToO/BOvANO7J7u/2n5mFbKrteJHqB2/5yxN9CRJE9JHeO'
 ),
 (
     'd0000000-0000-0000-0000-000000000003',
@@ -239,7 +239,7 @@ VALUES
     '01733333333',
     '1979333333333',
     'doctor',
-    '$2a$10$wT0lQnvyE6B1e8z.QZJmve5V62T43E2R.G3p7p19m9q9wK7oH8Zq.'
+    '$2a$10$16Jl2UzLToO/BOvANO7J7u/2n5mFbKrteJHqB2/5yxN9CRJE9JHeO'
 );
 
 -- Doctor Profiles
@@ -291,7 +291,7 @@ VALUES (
     '01812345678',
     '1995123456789',
     'patient',
-    '$2a$10$wT0lQnvyE6B1e8z.QZJmve5V62T43E2R.G3p7p19m9q9wK7oH8Zq.'
+    '$2a$10$16Jl2UzLToO/BOvANO7J7u/2n5mFbKrteJHqB2/5yxN9CRJE9JHeO'
 );
 
 INSERT INTO patient_profiles (user_id, blood_group, date_of_birth, gender, emergency_contact, address)

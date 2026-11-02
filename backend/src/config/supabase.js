@@ -19,7 +19,14 @@ const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABAS
 let supabase = null;
 let isConfigured = false;
 
-if (supabaseUrl && supabaseKey && !supabaseUrl.includes('your-project-ref')) {
+const isPlaceholder =
+  !supabaseUrl ||
+  !supabaseKey ||
+  supabaseUrl.includes('your-project-ref') ||
+  supabaseKey.includes('YOUR_SUPABASE_SERVICE_ROLE_KEY') ||
+  supabaseKey.includes('your_supabase_');
+
+if (!isPlaceholder) {
   try {
     supabase = createClient(supabaseUrl, supabaseKey, {
       auth: {
@@ -33,8 +40,9 @@ if (supabaseUrl && supabaseKey && !supabaseUrl.includes('your-project-ref')) {
     console.error('❌ [Supabase] Client Initialization Error:', err.message);
   }
 } else {
+  console.log('📌 [Supabase Endpoint Configured]:', supabaseUrl || 'Not set');
   console.warn(
-    '⚠️  [Supabase] Active credentials not detected in .env. Operating with local database fallback for inspection.'
+    '⚠️  [Supabase] Active service key is currently a placeholder in backend/.env. Ready to connect live once you paste YOUR_SUPABASE_SERVICE_ROLE_KEY. Operating with pre-seeded data in the interim.'
   );
 }
 

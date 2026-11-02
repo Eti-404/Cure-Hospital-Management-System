@@ -1,0 +1,6 @@
+# Backend dependencies and environment configurations
+node_modules/
+.env
+.env.local
+.env.*.local
+*.log

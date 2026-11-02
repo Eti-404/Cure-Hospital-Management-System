@@ -21,6 +21,8 @@ const doctorRoutes = require('./routes/doctorRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const pharmacyRoutes = require('./routes/pharmacyRoutes');
 const publicRoutes = require('./routes/publicRoutes');
+const bedRoutes = require('./routes/bedRoutes');
+const medicineRoutes = require('./routes/medicineRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -59,6 +61,8 @@ app.use('/api/doctor', doctorRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/pharmacy', pharmacyRoutes);
 app.use('/api/public', publicRoutes);
+app.use('/api/beds', bedRoutes);
+app.use('/api/medicines', medicineRoutes);
 
 // 404 Handler
 app.use((req, res) => {

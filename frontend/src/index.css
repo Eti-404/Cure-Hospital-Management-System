@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, ::before, ::after {
+    font-family: 'Hind Siliguri', sans-serif;
+  }
+
+  html {
+    font-family: 'Hind Siliguri', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: #f0fdfa;
+    font-family: 'Hind Siliguri', sans-serif;
+    font-size: 16px;
+    line-height: 1.625;
+    color: #1e293b;
+  }
+
+  input, select, textarea, button {
+    font-family: 'Hind Siliguri', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Hind Siliguri', sans-serif;
+    letter-spacing: -0.01em;
+  }
+}
+
+/* Custom smooth animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Dedicated Print Stylesheet: Ensures window.print() only prints the clean token slip */
+@media print {
+  @page {
+    margin: 10mm;
+    size: auto;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  /* Hide navigation bar, footer, buttons, toasts, and all .no-print elements */
+  .no-print,
+  header,
+  footer,
+  button,
+  .no-print * {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Reset modal backdrop container so only the slip is printed */
+  .modal-backdrop-print-reset {
+    position: static !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: visible !important;
+    inset: auto !important;
+    backdrop-filter: none !important;
+    display: block !important;
+  }
+
+  .modal-card-print-reset {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 auto !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    background: transparent !important;
+    overflow: visible !important;
+  }
+
+  /* Clean print layout for the appointment token slip */
+  .printable-slip-container {
+    width: 100% !important;
+    max-width: 620px !important;
+    margin: 0 auto !important;
+    padding: 24px !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid #000000 !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+    display: block !important;
+  }
+}

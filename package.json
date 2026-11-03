@@ -1,0 +1,25 @@
+{
+  "name": "niramoy-hospital-system",
+  "version": "1.0.0",
+  "description": "\"নিরাময়\" (Niramoy) Smart Hospital Management System - Academic Project (Problem No. 5)",
+  "scripts": {
+    "build": "npm install --prefix backend && npm install --prefix frontend --include=dev && npm run build --prefix frontend",
+    "start": "node backend/src/server.js",
+    "dev": "npm run start:all",
+    "start:all": "echo Please run backend and frontend in their respective directories or using the helper scripts.",
+    "backend": "cd backend && npm run start",
+    "backend:dev": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev"
+  },
+  "keywords": [
+    "hospital-management",
+    "react",
+    "vite",
+    "tailwind",
+    "express",
+    "supabase",
+    "niramoy"
+  ],
+  "author": "Eti-404",
+  "license": "MIT"
+}

@@ -1,12 +1,13 @@
 /**
- * "নিরাময়" (Niramoy) - Smart Hospital Management System
- * Backend REST API Server (Node.js + Express.js)
+ * "কিওর হসপিটাল" (Cure Hospital) - Smart Hospital Management System
+ * Backend REST API & Single-Service Static Web Server (Node.js + Express.js)
  */
 
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const fs = require('fs');
 
 // Load environment variables
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
@@ -14,18 +15,16 @@ dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 const errorHandler = require('./middleware/errorHandler');
 
-// Route imports
+// Core Problem 5 Route imports
+const appointmentRoutes = require('./routes/appointmentRoutes');
 const authRoutes = require('./routes/authRoutes');
-const ticketRoutes = require('./routes/ticketRoutes');
-const doctorRoutes = require('./routes/doctorRoutes');
-const adminRoutes = require('./routes/adminRoutes');
-const pharmacyRoutes = require('./routes/pharmacyRoutes');
-const publicRoutes = require('./routes/publicRoutes');
-const bedRoutes = require('./routes/bedRoutes');
-const medicineRoutes = require('./routes/medicineRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const HOST = process.env.HOST || '0.0.0.0';
+
+// Path to React production build
+const frontendDistPath = path.resolve(__dirname, '../../frontend/dist');
 
 // Middleware
 app.use(
@@ -48,28 +47,36 @@ app.use((req, res, next) => {
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'online',
-    system: 'নিরাময় (Niramoy) - Smart Hospital Management System',
+    system: 'কিওর হসপিটাল (Cure Hospital) Management System',
     timestamp: new Date().toISOString(),
     uptime: `${process.uptime().toFixed(1)}s`,
+    port: PORT,
   });
 });
 
-// API Routes Registration
+// Core API Routes (Problem 5: Doctors, Slots, Appointments, Tracking)
+app.use('/api', appointmentRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/tickets', ticketRoutes);
-app.use('/api/doctor', doctorRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/pharmacy', pharmacyRoutes);
-app.use('/api/public', publicRoutes);
-app.use('/api/beds', bedRoutes);
-app.use('/api/medicines', medicineRoutes);
 
-// 404 Handler
-app.use((req, res) => {
+// Explicit 404 for unhandled API endpoints
+app.use('/api', (req, res) => {
   res.status(404).json({
     success: false,
-    message: `অনুরোধকৃত রাউট পাওয়া যায়নি: ${req.method} ${req.originalUrl}`,
+    message: `অনুরোধকৃত এপিআই রাউট পাওয়া যায়নি: ${req.method} ${req.originalUrl}`,
   });
+});
+
+// Serve React production build static assets
+app.use(express.static(frontendDistPath));
+
+// Fallback all other GET requests to React's index.html (SPA client-side routing)
+app.get('*', (req, res) => {
+  const indexPath = path.join(frontendDistPath, 'index.html');
+  if (fs.existsSync(indexPath)) {
+    res.sendFile(indexPath);
+  } else {
+    res.status(404).send('Frontend build not found. Please run "npm run build" to compile frontend assets.');
+  }
 });
 
 // Centralized Error Middleware
@@ -77,11 +84,13 @@ app.use(errorHandler);
 
 // Start Server
 if (process.env.NODE_ENV !== 'test') {
-  app.listen(PORT, '127.0.0.1', () => {
+  app.listen(PORT, HOST, () => {
     console.log('====================================================');
-    console.log(`🏥 নিরাময় (Niramoy) Backend API Server`);
-    console.log(`🚀 Running on http://127.0.0.1:${PORT}`);
-    console.log(`📡 Health Check: http://127.0.0.1:${PORT}/api/health`);
+    console.log(`🏥 কিওর হসপিটাল (Cure Hospital) Backend & Web Server`);
+    console.log(`🚀 Running on http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}`);
+    console.log(`📡 Health Check: http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}/api/health`);
+    console.log(`🩺 Problem 5 Endpoints: http://${HOST === '0.0.0.0' ? 'localhost' : HOST}:${PORT}/api/doctors`);
+    console.log(`📦 Serving React Build from: ${frontendDistPath}`);
     console.log('====================================================');
   });
 }

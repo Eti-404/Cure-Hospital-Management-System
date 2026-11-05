@@ -241,7 +241,7 @@ function MainApp() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f0fdfa] text-slate-800 flex flex-col font-sans selection:bg-teal-100 selection:text-teal-900">
+    <div className="min-h-screen bg-[#f0fdfa] text-slate-800 flex flex-col font-sans selection:bg-teal-100 selection:text-teal-900 overflow-x-hidden w-full max-w-full">
       
       {/* 1. TOP NAVBAR WITH STRICT BRANDING, LANGUAGE TOGGLE & AUTH */}
       <Navbar
@@ -273,39 +273,39 @@ function MainApp() {
       {/* 2. FULL-WIDTH HERO SECTION (HOMEPAGE ONLY) */}
       {activeMode === 'patient' && currentPage === 'home' && (
         <section className="w-full bg-gradient-to-b from-[#e6fffa] via-[#f0fdfa] to-white border-b border-teal-100/70 no-print overflow-hidden relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-0">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-end">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-12 pb-0">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-end">
               
               {/* Left Column: Headline, Trust Badges, and Direct CTAs */}
-              <div className="lg:col-span-7 space-y-6 pb-10 sm:pb-14">
+              <div className="lg:col-span-7 space-y-5 sm:space-y-6 pb-8 sm:pb-14">
                 
                 {/* 2 Minimal Feature Trust Badges */}
-                <div className="flex flex-wrap items-center gap-2.5">
-                  <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white text-teal-900 font-bold text-xs sm:text-[13px] border border-teal-200/80 shadow-2xs">
-                    <CheckCircle className="w-3.5 h-3.5 text-teal-600" />
+                <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-white text-teal-900 font-bold text-xs sm:text-[13px] border border-teal-200/80 shadow-2xs">
+                    <CheckCircle className="w-3.5 h-3.5 text-teal-600 shrink-0" />
                     <span>{t('trustBadge1')}</span>
                   </span>
-                  <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white text-teal-800 font-bold text-xs sm:text-[13px] border border-teal-200/80 shadow-2xs">
-                    <Clock className="w-3.5 h-3.5 text-teal-600" />
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-white text-teal-800 font-bold text-xs sm:text-[13px] border border-teal-200/80 shadow-2xs">
+                    <Clock className="w-3.5 h-3.5 text-teal-600 shrink-0" />
                     <span>{t('trustBadge2')}</span>
                   </span>
                 </div>
 
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.25]">
+                <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-[1.25] break-words">
                   {t('heroTitlePrefix')}
                   <span className="text-teal-700">{t('heroTitleAccent')}</span>
                 </h1>
 
-                <p className="text-[16px] sm:text-[17px] text-slate-600 max-w-xl leading-relaxed">
+                <p className="text-[15px] sm:text-[17px] text-slate-600 max-w-xl leading-relaxed">
                   {t('heroSubtitle')}
                 </p>
 
                 {/* Primary Action Buttons */}
-                <div className="pt-2 flex flex-wrap items-center gap-4">
+                <div className="pt-2 flex flex-col xs:flex-row items-stretch xs:items-center gap-3 sm:gap-4">
                   <button
                     type="button"
                     onClick={() => handleGoToDoctors('ALL')}
-                    className="flex items-center gap-2.5 px-7 sm:px-8 py-3.5 sm:py-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-[15px] sm:text-[16px] shadow-sm transition-all hover:scale-[1.02] cursor-pointer"
+                    className="flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-[15px] sm:text-[16px] shadow-sm transition-all hover:scale-[1.02] cursor-pointer"
                   >
                     <span>{t('heroCtaBook')}</span>
                     <ArrowRight className="w-4 h-4" />
@@ -314,7 +314,7 @@ function MainApp() {
                   <button
                     type="button"
                     onClick={() => handleGoToTrack()}
-                    className="flex items-center gap-2 px-6 py-3.5 sm:py-4 rounded-xl font-bold text-[15px] sm:text-[16px] bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 transition-all cursor-pointer shadow-2xs"
+                    className="flex items-center justify-center gap-2 px-6 py-3.5 sm:py-4 rounded-xl font-bold text-[15px] sm:text-[16px] bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 transition-all cursor-pointer shadow-2xs"
                   >
                     <Search className="w-4 h-4 text-teal-600" />
                     <span>{t('heroCtaTrack')}</span>
@@ -324,15 +324,15 @@ function MainApp() {
               </div>
 
               {/* Right Column: Hero Cutout Image with Blended Hospital Logo Backdrop Effect */}
-              <div className="lg:col-span-5 flex justify-center lg:justify-end items-end self-end pt-4 lg:pt-0">
-                <div className="relative w-full max-w-lg flex items-end justify-center">
+              <div className="lg:col-span-5 flex justify-center lg:justify-end items-end self-end pt-2 lg:pt-0">
+                <div className="relative w-full max-w-md lg:max-w-lg flex items-end justify-center">
                   
                   {/* Backdrop Layer 1: Ambient Glowing Radial Aura */}
                   <div className="absolute -inset-4 sm:-inset-8 bg-gradient-to-tr from-teal-400/20 via-cyan-300/15 to-teal-200/25 rounded-full blur-3xl -z-10 pointer-events-none"></div>
 
                   {/* Backdrop Layer 2: Hospital Cross Emblem Watermark (Soft Blend 15-20% Opacity) */}
                   <div className="absolute inset-0 flex items-center justify-center opacity-15 sm:opacity-20 pointer-events-none -z-10 scale-110 sm:scale-125">
-                    <svg className="w-72 h-72 sm:w-80 sm:h-80 text-teal-800" viewBox="0 0 24 24" fill="currentColor">
+                    <svg className="w-60 h-60 sm:w-80 sm:h-80 text-teal-800" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M19 10.5h-5.5V5c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v5.5H5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5h5.5V19c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5v-5.5H19c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5z"/>
                     </svg>
                   </div>
@@ -344,7 +344,7 @@ function MainApp() {
                       e.currentTarget.src = '/assets/hero-banner.svg';
                     }}
                     alt="Doctor, Nurse and Patient"
-                    className="relative z-10 w-auto max-h-[350px] sm:max-h-[420px] lg:max-h-[480px] object-contain select-none drop-shadow-md block"
+                    className="relative z-10 w-auto max-h-[260px] sm:max-h-[360px] lg:max-h-[480px] object-contain select-none drop-shadow-md block"
                   />
                 </div>
               </div>
@@ -357,16 +357,16 @@ function MainApp() {
       {/* FULL-WIDTH HEADER (ASSISTANT DESK VIEW) */}
       {activeMode === 'assistant' && (
         <section className="w-full bg-[#f0f7f3] border-b border-slate-100 no-print">
-          <div className="max-w-7xl mx-auto px-6 py-10 md:py-12 flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10 md:py-12 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6">
             <div className="space-y-2">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white text-teal-800 text-[13px] font-semibold border border-teal-200 shadow-xs">
                 <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
                 <span className="notranslate" translate="no">{t('assistantDeskBadge')}</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+              <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
                 {t('assistantDeskTitle')}
               </h1>
-              <p className="text-[16px] text-slate-600 max-w-2xl leading-relaxed">
+              <p className="text-[14px] sm:text-[16px] text-slate-600 max-w-2xl leading-relaxed">
                 {t('assistantDeskSub')}
               </p>
             </div>
@@ -375,7 +375,7 @@ function MainApp() {
               type="button"
               onClick={handleResetDemo}
               disabled={isResetting}
-              className="px-5 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-[14px] font-semibold border border-slate-200 shadow-xs transition-colors shrink-0 self-start md:self-auto cursor-pointer"
+              className="w-full xs:w-auto px-5 py-2.5 sm:py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-[14px] font-semibold border border-slate-200 shadow-xs transition-colors shrink-0 self-start md:self-auto cursor-pointer text-center"
             >
               {isResetting ? (
                 <span>রিসেট হচ্ছে...</span>
@@ -388,7 +388,7 @@ function MainApp() {
       )}
 
       {/* 3. MAIN CONTENT AREA */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-12">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-6 sm:py-12 space-y-8 sm:space-y-12">
         
         {/* PATIENT PORTAL ROUTING */}
         {activeMode === 'patient' && (
@@ -433,6 +433,7 @@ function MainApp() {
                 onSelectSlipForPrint={(apt) => setSelectedSlipForPrint(apt)}
                 onGoHome={handleGoHome}
                 onGoToDoctors={() => handleGoToDoctors('ALL')}
+                showToast={showToast}
               />
             )}
 
@@ -485,8 +486,8 @@ function MainApp() {
       )}
 
       {/* Professional Minimal Copyright Footer with Google Translate Protection */}
-      <footer className="bg-white border-t border-slate-100 py-6 mt-16 no-print text-center select-none">
-        <p className="text-[14px] text-slate-500 font-medium notranslate" translate="no">
+      <footer className="bg-white border-t border-slate-100 py-6 mt-12 sm:mt-16 no-print text-center select-none px-4">
+        <p className="text-xs sm:text-[14px] text-slate-500 font-medium notranslate" translate="no">
           কিওর হসপিটাল ব্যবস্থাপনা সিস্টেম | © 2026 Cure Hospital. All Rights Reserved.
         </p>
       </footer>

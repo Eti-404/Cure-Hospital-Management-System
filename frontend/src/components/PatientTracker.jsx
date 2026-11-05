@@ -11,7 +11,10 @@ import {
   RefreshCw,
   Home,
   ChevronRight,
-  RotateCcw
+  RotateCcw,
+  Ban,
+  AlertTriangle,
+  X
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useLanguage } from '../context/LanguageContext';
@@ -20,7 +23,8 @@ export default function PatientTracker({
   initialPhone, 
   onSelectSlipForPrint,
   onGoHome,
-  onGoToDoctors
+  onGoToDoctors,
+  showToast
 }) {
   const { lang, t } = useLanguage();
   const [phone, setPhone] = useState(initialPhone || '');
@@ -28,6 +32,86 @@ export default function PatientTracker({
   const [patient, setPatient] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+
+  // Patient Self-Cancellation Modal States
+  const [cancelModalOpen, setCancelModalOpen] = useState(false);
+  const [selectedAppointmentForCancel, setSelectedAppointmentForCancel] = useState(null);
+  const [cancelReason, setCancelReason] = useState('');
+  const [isSubmittingCancel, setIsSubmittingCancel] = useState(false);
+  const [cancelError, setCancelError] = useState('');
+
+  const handleOpenCancelModal = (apt) => {
+    setSelectedAppointmentForCancel(apt);
+    setCancelReason('');
+    setCancelError('');
+    setCancelModalOpen(true);
+  };
+
+  const handleCloseCancelModal = () => {
+    if (isSubmittingCancel) return;
+    setCancelModalOpen(false);
+    setSelectedAppointmentForCancel(null);
+    setCancelReason('');
+    setCancelError('');
+  };
+
+  const handleConfirmCancel = async () => {
+    if (!selectedAppointmentForCancel) return;
+    setIsSubmittingCancel(true);
+    setCancelError('');
+
+    try {
+      const res = await api.patientCancelAppointment(selectedAppointmentForCancel.id, {
+        phone: phone.trim(),
+        reason: cancelReason.trim() || (lang === 'bn' ? 'রোগী কর্তৃক বাতিলকৃত' : 'Patient self-cancellation'),
+      });
+
+      // Update local appointments list immediately
+      setAppointments((prev) =>
+        prev.map((a) =>
+          a.id === selectedAppointmentForCancel.id
+            ? {
+                ...a,
+                status: 'CANCELLED',
+                cancellation_reason: cancelReason.trim() || (lang === 'bn' ? 'রোগী কর্তৃক বাতিলকৃত' : 'Patient self-cancellation'),
+                cancelled_by: 'PATIENT',
+                cancelled_at: new Date().toISOString(),
+                payment_status: res.appointment?.payment_status || (a.payment_status === 'PAID_ONLINE' ? 'REFUNDED' : a.payment_status),
+                refund_amount: res.refundAmount || a.consultation_fee || 800,
+              }
+            : a
+        )
+      );
+
+      // Trigger global synchronization event so header notification badge, assistant desk and booking availability update in real time
+      window.dispatchEvent(
+        new CustomEvent('cure_appointment_synced', {
+          detail: {
+            action: 'patient_cancelled',
+            appointmentId: selectedAppointmentForCancel.id,
+            doctor_id: selectedAppointmentForCancel.doctor_id,
+            time_slot: selectedAppointmentForCancel.time_slot,
+          },
+        })
+      );
+
+      if (showToast) {
+        showToast(
+          res.message || (lang === 'bn' 
+            ? 'অ্যাপয়েন্টমেন্ট সফলভাবে বাতিল করা হয়েছে এবং স্লটটি পুনরায় বুকিংয়ের জন্য উন্মুক্ত করা হয়েছে।' 
+            : 'Appointment cancelled successfully and slot freed for booking!'),
+          res.refundProcessed ? 'info' : 'success'
+        );
+      }
+
+      setCancelModalOpen(false);
+      setSelectedAppointmentForCancel(null);
+    } catch (err) {
+      setCancelError(err.message || (lang === 'bn' ? 'অ্যাপয়েন্টমেন্ট বাতিল করতে সমস্যা হয়েছে।' : 'Failed to cancel appointment.'));
+    } finally {
+      setIsSubmittingCancel(false);
+    }
+  };
 
   // Track function: can run silently in the background
   const handleTrack = async (searchPhone = phone, showSpinner = true) => {
@@ -107,7 +191,7 @@ export default function PatientTracker({
     <div id="tracker-section" className="space-y-6 animate-fade-in scroll-mt-24 font-sans">
       
       {/* 0. Top Breadcrumb Navigation */}
-      <nav className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 font-medium py-1">
+      <nav className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-slate-500 font-medium py-1">
         <button
           type="button"
           onClick={onGoHome}
@@ -135,12 +219,12 @@ export default function PatientTracker({
       </nav>
 
       {/* Tracker Search Header */}
-      <div className="bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-200/80 p-6 sm:p-10 space-y-6">
+      <div className="bg-white rounded-2xl shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-200/80 p-4 sm:p-10 space-y-5 sm:space-y-6">
         <div>
           <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             {t('trackerTitle')}
           </h3>
-          <p className="text-[15px] text-slate-600 mt-1 leading-relaxed">
+          <p className="text-[14px] sm:text-[15px] text-slate-600 mt-1 leading-relaxed">
             {t('trackerSub')}
           </p>
         </div>
@@ -159,16 +243,16 @@ export default function PatientTracker({
               value={phone}
               onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))}
               placeholder={t('phonePlaceholder')}
-              className="w-full px-4 py-3.5 rounded-xl border border-slate-200 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 outline-none text-slate-900 font-mono text-[16px] leading-relaxed transition-all"
+              className="w-full pl-4 pr-10 py-3 sm:py-3.5 rounded-xl border border-slate-200 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 outline-none text-slate-900 font-mono text-[15px] sm:text-[16px] leading-relaxed transition-all"
               required
             />
-            <Search className="w-5 h-5 text-slate-400 absolute right-4 top-4" />
+            <Search className="w-5 h-5 text-slate-400 absolute right-3.5 top-3 sm:top-3.5" />
           </div>
 
           <button
             type="submit"
             disabled={isLoading || phone.length < 11}
-            className="px-8 py-3.5 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold text-[16px] rounded-xl shadow-xs transition-all hover:scale-[1.01] flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed shrink-0"
+            className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-3.5 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold text-[15px] sm:text-[16px] rounded-xl shadow-xs transition-all hover:scale-[1.01] flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed shrink-0"
           >
             {isLoading ? (
               <>
@@ -249,7 +333,7 @@ export default function PatientTracker({
                   return (
                     <div
                       key={apt.id}
-                      className={`bg-white rounded-2xl p-6 border transition-all flex flex-col justify-between ${
+                      className={`bg-white rounded-2xl p-4 sm:p-6 border transition-all flex flex-col justify-between ${
                         isConfirmed 
                           ? 'border-teal-300 shadow-[0_4px_25px_-4px_rgba(13,148,136,0.15)]' 
                           : apt.status === 'PENDING'
@@ -370,16 +454,27 @@ export default function PatientTracker({
 
                       </div>
 
-                      {/* Print Slip Action (If confirmed) */}
-                      {isConfirmed && onSelectSlipForPrint && (
-                        <div className="pt-5">
+                      {/* Action Row for Active Bookings (CONFIRMED or PENDING) */}
+                      {!isCancelled && (
+                        <div className="pt-4 mt-2 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                          {isConfirmed && onSelectSlipForPrint && (
+                            <button
+                              type="button"
+                              onClick={() => onSelectSlipForPrint(apt)}
+                              className="flex-1 py-2.5 px-4 rounded-xl font-bold text-[13px] sm:text-[14px] bg-teal-700 hover:bg-teal-800 text-white transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01]"
+                            >
+                              <Printer className="w-4 h-4" />
+                              <span>{lang === 'bn' ? 'টোকেন স্লিপ দেখুন ও প্রিন্ট করুন' : 'View & Print Token Slip'}</span>
+                            </button>
+                          )}
+
                           <button
                             type="button"
-                            onClick={() => onSelectSlipForPrint(apt)}
-                            className="w-full py-2.5 px-4 rounded-xl font-bold text-[14px] bg-teal-700 hover:bg-teal-800 text-white transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01]"
+                            onClick={() => handleOpenCancelModal(apt)}
+                            className={`${isConfirmed ? 'sm:w-auto px-4' : 'w-full px-4'} py-2.5 rounded-xl font-bold text-[13px] sm:text-[14px] bg-rose-50 hover:bg-rose-100 text-rose-700 hover:text-rose-800 border border-rose-200 transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs hover:scale-[1.01]`}
                           >
-                            <Printer className="w-4 h-4" />
-                            <span>{lang === 'bn' ? 'টোকেন স্লিপ দেখুন ও প্রিন্ট করুন' : 'View & Print Token Slip'}</span>
+                            <Ban className="w-4 h-4 text-rose-600" />
+                            <span>{lang === 'bn' ? 'বাতিল করুন' : 'Cancel Appointment'}</span>
                           </button>
                         </div>
                       )}
@@ -399,6 +494,122 @@ export default function PatientTracker({
             </div>
           )}
 
+        </div>
+      )}
+
+      {/* Patient Self-Cancellation Confirmation Modal */}
+      {cancelModalOpen && selectedAppointmentForCancel && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fade-in font-sans">
+          <div className="bg-white rounded-3xl shadow-2xl border border-slate-100 max-w-lg w-full p-6 sm:p-7 space-y-5 animate-scale-up">
+            
+            {/* Header */}
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 shrink-0 shadow-2xs">
+                  <AlertTriangle className="w-6 h-6 stroke-[2.2]" />
+                </div>
+                <div>
+                  <h3 className="text-lg sm:text-xl font-extrabold text-slate-900">
+                    {lang === 'bn' ? 'অ্যাপয়েন্টমেন্ট বাতিল নিশ্চিতকরণ' : 'Confirm Appointment Cancellation'}
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    {lang === 'bn' ? 'সংশ্লিষ্ট ডাক্তারের ৩০ মিনিটের স্লটটি পুনরায় উন্মুক্ত হবে' : 'The 30-minute doctor slot will be restored for others'}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleCloseCancelModal}
+                disabled={isSubmittingCancel}
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Appointment Details Box */}
+            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 text-xs sm:text-sm text-slate-700">
+              <div className="flex justify-between items-center">
+                <span className="text-slate-500 font-medium">{lang === 'bn' ? 'বিশেষজ্ঞ ডাক্তার:' : 'Doctor:'}</span>
+                <strong className="text-slate-900 font-bold">{selectedAppointmentForCancel.doctor?.name || 'Doctor'}</strong>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-500 font-medium">{lang === 'bn' ? 'তারিখ ও সময়:' : 'Date & Slot:'}</span>
+                <span className="font-mono font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded border border-teal-100">
+                  {selectedAppointmentForCancel.appointment_date} • {selectedAppointmentForCancel.time_slot}
+                </span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-slate-500 font-medium">{lang === 'bn' ? 'রোগীর মোবাইল নম্বর:' : 'Patient Phone:'}</span>
+                <span className="font-mono font-bold text-slate-900">{phone}</span>
+              </div>
+
+              {/* Online Refund alert in modal if online payment */}
+              {(selectedAppointmentForCancel.payment_status === 'PAID_ONLINE' || selectedAppointmentForCancel.payment_method === 'ONLINE_MFS') && (
+                <div className="mt-2 pt-2 border-t border-slate-200 text-xs text-purple-900 bg-purple-50 p-2.5 rounded-xl border border-purple-200 flex items-center gap-2">
+                  <RotateCcw className="w-4 h-4 text-purple-700 shrink-0" />
+                  <span>
+                    {lang === 'bn' 
+                      ? `অনলাইন পেমেন্ট ৳${selectedAppointmentForCancel.consultation_fee || 800} সম্পূর্ণ রিফান্ড হিসেবে প্রসেস করা হবে।` 
+                      : `Online payment of ৳${selectedAppointmentForCancel.consultation_fee || 800} will be fully refunded.`}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Reason Field */}
+            <div className="space-y-1.5">
+              <label className="block text-xs font-bold text-slate-700">
+                {lang === 'bn' ? 'বাতিলকরণের কারণ (ঐচ্ছিক):' : 'Reason for Cancellation (Optional):'}
+              </label>
+              <textarea
+                rows={2}
+                value={cancelReason}
+                onChange={(e) => setCancelReason(e.target.value)}
+                placeholder={lang === 'bn' ? 'যেমন: জরুরি কাজ, শারীরিক সুস্থতা ইত্যাদি...' : 'e.g., Personal emergency, feeling better...'}
+                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-rose-500 focus:ring-4 focus:ring-rose-500/10 text-xs sm:text-sm text-slate-800 outline-none resize-none transition-all placeholder:text-slate-400"
+              />
+            </div>
+
+            {/* Error Message */}
+            {cancelError && (
+              <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-center gap-2 font-medium">
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                <span>{cancelError}</span>
+              </div>
+            )}
+
+            {/* Modal Actions */}
+            <div className="flex flex-col sm:flex-row items-center gap-2.5 pt-2">
+              <button
+                type="button"
+                onClick={handleCloseCancelModal}
+                disabled={isSubmittingCancel}
+                className="w-full sm:flex-1 py-2.5 px-4 rounded-xl border border-slate-200 text-slate-700 font-bold text-xs sm:text-sm hover:bg-slate-50 transition-colors cursor-pointer"
+              >
+                {lang === 'bn' ? 'ফিরে যান' : 'Keep Appointment'}
+              </button>
+              <button
+                type="button"
+                onClick={handleConfirmCancel}
+                disabled={isSubmittingCancel}
+                className="w-full sm:flex-1 py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs sm:text-sm shadow-xs transition-all hover:scale-[1.01] flex items-center justify-center gap-2 cursor-pointer disabled:bg-rose-300"
+              >
+                {isSubmittingCancel ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    <span>{lang === 'bn' ? 'বাতিল হচ্ছে...' : 'Cancelling...'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Ban className="w-4 h-4" />
+                    <span>{lang === 'bn' ? 'হ্যাঁ, বাতিল নিশ্চিত করুন' : 'Confirm Cancellation'}</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+          </div>
         </div>
       )}
 

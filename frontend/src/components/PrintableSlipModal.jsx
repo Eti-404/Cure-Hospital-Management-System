@@ -47,21 +47,21 @@ export default function PrintableSlipModal({ appointment, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm overflow-y-auto modal-backdrop-print-reset font-sans">
-      <div className="w-full max-w-md sm:max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-100 flex flex-col max-h-[88vh] my-auto overflow-hidden animate-fade-in modal-card-print-reset">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/60 backdrop-blur-sm overflow-y-auto modal-backdrop-print-reset font-sans">
+      <div className="w-full max-w-md sm:max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-100 flex flex-col max-h-[92vh] sm:max-h-[88vh] my-auto overflow-hidden animate-fade-in modal-card-print-reset">
         
         {/* Modal Top Bar (Sticky, No-Print) */}
-        <div className="no-print bg-[#e6fffa] px-5 py-3.5 border-b border-teal-100 flex items-center justify-between shrink-0">
+        <div className="no-print bg-[#e6fffa] px-4 sm:px-5 py-3 sm:py-3.5 border-b border-teal-100 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 text-teal-700 shrink-0" />
-            <h3 className="font-bold text-slate-900 text-[15px]">
+            <h3 className="font-bold text-slate-900 text-sm sm:text-[15px] truncate">
               {lang === 'bn' ? 'ডিজিটাল অ্যাপয়েন্টমেন্ট টোকেন স্লিপ' : 'Digital Appointment Token Slip'}
             </h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-xl transition-colors cursor-pointer"
+            className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-xl transition-colors cursor-pointer shrink-0"
             title={lang === 'bn' ? 'বন্ধ করুন' : 'Close'}
           >
             <X className="w-5 h-5" />
@@ -69,19 +69,19 @@ export default function PrintableSlipModal({ appointment, onClose }) {
         </div>
 
         {/* Modal Scrollable Body: Houses the Printable Slip Container */}
-        <div className="overflow-y-auto p-4 sm:p-6 space-y-4 flex-1">
+        <div className="overflow-y-auto p-3.5 sm:p-6 space-y-4 flex-1">
           
           <div className="printable-slip-container bg-white text-slate-800 space-y-4">
             
             {/* 1. Hospital Branding Header */}
             <div className="border-b-2 border-teal-700 pb-3 text-center relative">
-              <div className="inline-flex items-center justify-center w-11 h-11 rounded-2xl bg-teal-100 text-teal-800 mb-1.5 shadow-2xs">
-                <Stethoscope className="w-6 h-6 stroke-[2.2]" />
+              <div className="inline-flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-teal-100 text-teal-800 mb-1.5 shadow-2xs">
+                <Stethoscope className="w-5 h-5 sm:w-6 sm:h-6 stroke-[2.2]" />
               </div>
-              <h2 className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 notranslate" translate="no">
+              <h2 className="text-lg sm:text-2xl font-black tracking-tight text-slate-900 notranslate" translate="no">
                 {lang === 'bn' ? 'কিওর হসপিটাল' : 'Cure Hospital'}
               </h2>
-              <p className="text-[11px] font-bold text-teal-700 tracking-wider uppercase mt-0.5 notranslate" translate="no">
+              <p className="text-[10px] sm:text-[11px] font-bold text-teal-700 tracking-wider uppercase mt-0.5 notranslate" translate="no">
                 CURE SPECIALIZED HOSPITAL & RESEARCH INSTITUTE
               </p>
               <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5">
@@ -91,21 +91,21 @@ export default function PrintableSlipModal({ appointment, onClose }) {
               </p>
 
               {/* Minimal Clean Digital Serial & Token Box (Dark Turquoise Border, No Barcode/Wingdings) */}
-              <div className="mt-3.5 inline-block bg-teal-50/70 border-2 border-teal-600 text-teal-950 px-7 py-2.5 rounded-xl text-center shadow-xs notranslate" translate="no">
-                <span className="block text-[11px] sm:text-xs font-bold text-teal-800 uppercase tracking-wider notranslate" translate="no">
+              <div className="mt-3 inline-block bg-teal-50/70 border-2 border-teal-600 text-teal-950 px-4 sm:px-7 py-2 sm:py-2.5 rounded-xl text-center shadow-xs notranslate max-w-full" translate="no">
+                <span className="block text-[10px] sm:text-xs font-bold text-teal-800 uppercase tracking-wider notranslate" translate="no">
                   {lang === 'bn' ? 'ডিজিটাল সিরিয়াল ও টোকেন নম্বর' : 'Digital Serial & Token Number'}
                 </span>
-                <span className="text-2xl sm:text-3xl font-black font-mono tracking-wider notranslate block mt-0.5 text-slate-900" translate="no">
+                <span className="text-xl sm:text-3xl font-black font-mono tracking-wider notranslate block mt-0.5 text-slate-900 break-all" translate="no">
                   {token_id || 'CURE-2026-CONFIRMED'}
                 </span>
               </div>
             </div>
 
-            {/* 2. Patient & Doctor Details Grid (2 Columns) */}
-            <div className="grid grid-cols-2 gap-3 text-xs sm:text-[13px] bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+            {/* 2. Patient & Doctor Details Grid (Responsive 1 or 2 Columns) */}
+            <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 text-xs sm:text-[13px] bg-slate-50 p-3 sm:p-3.5 rounded-xl border border-slate-100">
               
               {/* Patient Info */}
-              <div className="space-y-1 border-r border-slate-200 pr-2">
+              <div className="space-y-1 border-b xs:border-b-0 xs:border-r border-slate-200 pb-2.5 xs:pb-0 xs:pr-2">
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
                   {lang === 'bn' ? 'রোগীর বিবরণ' : 'Patient Info'}
                 </span>
@@ -125,7 +125,7 @@ export default function PrintableSlipModal({ appointment, onClose }) {
               </div>
 
               {/* Doctor Info */}
-              <div className="space-y-1 pl-1">
+              <div className="space-y-1 pt-1 xs:pt-0 xs:pl-1">
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
                   {lang === 'bn' ? 'ডাক্তার ও চেম্বার' : 'Doctor & Chamber'}
                 </span>
@@ -165,13 +165,13 @@ export default function PrintableSlipModal({ appointment, onClose }) {
               </div>
 
               {/* Consultation Fee & Payment Method */}
-              <div className="flex items-center justify-between bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-100">
-                <span className="text-slate-600 font-medium">
-                  {lang === 'bn' ? 'কনসালটেশন ফি ও পেমেন্ট অবস্থা:' : 'Fee & Payment Status:'}
+              <div className="flex flex-col xs:flex-row xs:items-center justify-between gap-1.5 bg-slate-50 px-3 sm:px-3.5 py-2 rounded-xl border border-slate-100">
+                <span className="text-slate-600 font-medium text-xs sm:text-[13px]">
+                  {lang === 'bn' ? 'ফি ও পেমেন্ট অবস্থা:' : 'Fee & Payment Status:'}
                 </span>
                 <div className="flex items-center gap-2">
                   <span className="font-black text-slate-900">৳{consultation_fee || doctor?.fee || 800}</span>
-                  <span className={`px-2 py-0.5 rounded-full font-bold text-[11px] sm:text-xs ${
+                  <span className={`px-2 py-0.5 rounded-full font-bold text-[10px] sm:text-xs ${
                     isPaidOnline
                       ? 'bg-teal-100 text-teal-900 border border-teal-300'
                       : 'bg-amber-100 text-amber-900 border border-amber-200'

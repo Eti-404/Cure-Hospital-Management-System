@@ -100,7 +100,7 @@ export default function DoctorListing({
     <section id="doctor-listing-section" className="space-y-6 animate-fade-in scroll-mt-24 font-sans">
       
       {/* 0. TOP BREADCRUMB NAVIGATION & BACK TO HOME */}
-      <nav className="flex items-center gap-2 text-xs sm:text-sm text-slate-500 font-medium py-1">
+      <nav className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-slate-500 font-medium py-1">
         <button
           type="button"
           onClick={onGoHome}
@@ -132,16 +132,16 @@ export default function DoctorListing({
       </nav>
 
       {/* 1. TOP INSTANT SEARCH BAR */}
-      <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="bg-white rounded-2xl p-3.5 sm:p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] border border-slate-200/80 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
         <div className="relative w-full sm:flex-1">
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder={t('searchDoctorPlaceholder')}
-            className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-slate-200 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 outline-none text-[15px] sm:text-[16px] text-slate-800 transition-all placeholder:text-slate-400"
+            className="w-full pl-10 sm:pl-11 pr-4 py-3 sm:py-3.5 rounded-xl border border-slate-200 focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 outline-none text-[14px] sm:text-[16px] text-slate-800 transition-all placeholder:text-slate-400"
           />
-          <Search className="w-5 h-5 text-slate-400 absolute left-4 top-4" />
+          <Search className="w-5 h-5 text-slate-400 absolute left-3.5 top-3.5 sm:left-4 sm:top-4" />
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end">
@@ -335,57 +335,57 @@ export default function DoctorListing({
                 return (
                   <div
                     key={doc.id}
-                    className="bg-white rounded-2xl p-6 border border-slate-200/90 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-teal-300 transition-all duration-200 flex flex-col md:flex-row md:items-center justify-between gap-6 group"
+                    className="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200/90 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-md hover:border-teal-300 transition-all duration-200 flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 group"
                   >
                     
                     {/* Left & Middle: Doctor Info */}
-                    <div className="flex items-start gap-4 flex-1">
+                    <div className="flex items-start gap-3.5 sm:gap-4 flex-1 min-w-0">
                       
                       {/* Doctor Avatar / Icon with Verification Pill */}
                       <div className="relative shrink-0">
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-teal-100 to-cyan-50 border border-teal-200 flex items-center justify-center text-teal-700 shadow-2xs group-hover:scale-105 transition-transform">
-                          <Stethoscope className="w-8 h-8 stroke-[2]" />
+                        <div className="w-14 h-14 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-teal-100 to-cyan-50 border border-teal-200 flex items-center justify-center text-teal-700 shadow-2xs group-hover:scale-105 transition-transform">
+                          <Stethoscope className="w-7 h-7 sm:w-8 sm:h-8 stroke-[2]" />
                         </div>
-                        <span className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-teal-600 text-white flex items-center justify-center border-2 border-white text-[10px]" title="Verified Specialist">
+                        <span className="absolute -bottom-1 -right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-teal-600 text-white flex items-center justify-center border-2 border-white text-[9px] sm:text-[10px]" title="Verified Specialist">
                           ✓
                         </span>
                       </div>
 
                       {/* Doctor Details */}
-                      <div className="space-y-1.5 flex-1">
+                      <div className="space-y-1.5 flex-1 min-w-0">
                         
                         {/* Department Badge & Rating */}
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="inline-block text-xs font-bold text-teal-900 bg-teal-50 px-2.5 py-0.5 rounded-md border border-teal-100">
+                        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                          <span className="inline-block text-[11px] sm:text-xs font-bold text-teal-900 bg-teal-50 px-2 py-0.5 sm:px-2.5 rounded-md border border-teal-100">
                             {doc.department}
                           </span>
-                          <span className="inline-flex items-center gap-1 text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60">
-                            <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                          <span className="inline-flex items-center gap-1 text-[11px] sm:text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60">
+                            <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-amber-500 text-amber-500" />
                             <span>{doc.rating || 4.9}</span>
                             <span className="text-amber-800/60 font-normal">({doc.reviews_count || 120}+)</span>
                           </span>
                         </div>
 
                         {/* Name & Degree */}
-                        <h3 className="text-[19px] sm:text-[20px] font-black text-slate-900 tracking-tight leading-snug group-hover:text-teal-700 transition-colors">
+                        <h3 className="text-[17px] sm:text-[20px] font-black text-slate-900 tracking-tight leading-snug group-hover:text-teal-700 transition-colors break-words">
                           {doc.name}
                         </h3>
-                        <p className="text-[13px] font-semibold text-slate-700">
+                        <p className="text-xs sm:text-[13px] font-semibold text-slate-700 break-words">
                           {doc.degree}
                         </p>
-                        <p className="text-[13px] text-slate-500">
+                        <p className="text-xs sm:text-[13px] text-slate-500 break-words">
                           {doc.designation}
                         </p>
 
                         {/* Experience & Room (Cleaned without strange symbols) */}
-                        <div className="pt-2 flex flex-wrap items-center gap-4 text-xs sm:text-[13px] text-slate-600">
+                        <div className="pt-1.5 flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-[13px] text-slate-600">
                           <span className="flex items-center gap-1 font-medium">
                             <Briefcase className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                             <span className="notranslate font-semibold text-slate-700" translate="no">
                               {formatDoctorExperience(doc.experience)}
                             </span>
                           </span>
-                          <span className="text-slate-300">•</span>
+                          <span className="text-slate-300 hidden xs:inline">•</span>
                           <span className="flex items-center gap-1 font-medium text-slate-700">
                             <MapPin className="w-3.5 h-3.5 text-teal-600 shrink-0" />
                             <span>{t('room')}: {doc.room_no}</span>
@@ -394,13 +394,13 @@ export default function DoctorListing({
 
                         {/* Schedule & 30-Min Slot Badge */}
                         <div className="pt-2 flex flex-wrap items-center gap-2 text-xs">
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-slate-50 border border-slate-200/80 text-slate-700 font-semibold">
-                            <Calendar className="w-3.5 h-3.5 text-teal-600" />
-                            <span>{lang === 'bn' ? doc.schedule_days_bn : (doc.schedule_days ? doc.schedule_days.join(', ') : 'Sat, Mon, Wed')}</span>
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200/80 text-slate-700 font-semibold">
+                            <Calendar className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+                            <span className="break-words">{lang === 'bn' ? doc.schedule_days_bn : (doc.schedule_days ? doc.schedule_days.join(', ') : 'Sat, Mon, Wed')}</span>
                           </span>
 
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-teal-50 border border-teal-200/80 text-teal-900 font-semibold">
-                            <Clock className="w-3.5 h-3.5 text-teal-600" />
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-teal-50 border border-teal-200/80 text-teal-900 font-semibold">
+                            <Clock className="w-3.5 h-3.5 text-teal-600 shrink-0" />
                             <span>{lang === 'bn' ? doc.schedule_time_bn : doc.visiting_time}</span>
                             <span className="text-[11px] font-bold text-teal-700">(৩০ মিনিট স্লট)</span>
                           </span>
@@ -410,13 +410,13 @@ export default function DoctorListing({
                     </div>
 
                     {/* Right: Fee Box & "Select & Book" Action Button */}
-                    <div className="md:border-l md:border-slate-100 md:pl-6 flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-3 shrink-0">
+                    <div className="pt-3 md:pt-0 border-t md:border-t-0 md:border-l border-slate-100 md:pl-6 flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-3 shrink-0">
                       
                       <div className="text-left md:text-right">
-                        <span className="text-[11px] uppercase tracking-wider font-bold text-slate-400 block">
+                        <span className="text-[10px] sm:text-[11px] uppercase tracking-wider font-bold text-slate-400 block">
                           {t('consultationFee')}
                         </span>
-                        <div className="text-2xl font-black text-teal-700 tracking-tight">
+                        <div className="text-xl sm:text-2xl font-black text-teal-700 tracking-tight">
                           ৳{doc.fee || 800}
                         </div>
                       </div>
@@ -424,7 +424,7 @@ export default function DoctorListing({
                       <button
                         type="button"
                         onClick={() => onSelectDoctorToBook(doc)}
-                        className="flex items-center gap-2 px-5 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-[14px] shadow-sm transition-all hover:scale-[1.02] cursor-pointer shrink-0"
+                        className="flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs sm:text-[14px] shadow-sm transition-all hover:scale-[1.02] cursor-pointer"
                       >
                         <span>{t('selectAndBook')}</span>
                         <ArrowRight className="w-4 h-4 stroke-[2.2]" />

@@ -65,6 +65,13 @@ CREATE INDEX idx_appointments_patient ON appointments(patient_id);
 CREATE INDEX idx_appointments_doctor ON appointments(doctor_id);
 CREATE INDEX idx_appointments_date ON appointments(appointment_date);
 
+-- Partial Unique Index: Only active appointments occupy a doctor's 30-minute time slot.
+-- Cancelled appointments do NOT block re-booking of the slot.
+DROP INDEX IF EXISTS uq_active_doctor_slot_date;
+CREATE UNIQUE INDEX uq_active_doctor_slot_date 
+ON appointments (doctor_id, appointment_date, time_slot) 
+WHERE status IN ('PENDING', 'CONFIRMED');
+
 -- ============================================================================
 -- 6. SEED DATA (Academic Presentation & Viva Ready)
 -- ============================================================================

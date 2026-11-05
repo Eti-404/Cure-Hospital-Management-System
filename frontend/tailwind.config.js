@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        xs: '420px',
+      },
       colors: {
         mint: {
           soft: '#eef6f2',

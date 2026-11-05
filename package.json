@@ -5,6 +5,7 @@
   "scripts": {
     "build": "npm install --prefix backend && npm install --prefix frontend --include=dev && npm run build --prefix frontend",
     "start": "node backend/src/server.js",
+    "test": "jest",
     "dev": "npm run start:all",
     "start:all": "echo Please run backend and frontend in their respective directories or using the helper scripts.",
     "backend": "cd backend && npm run start",
@@ -21,5 +22,16 @@
     "niramoy"
   ],
   "author": "Eti-404",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "jest": "^30.5.2"
+  }
 }

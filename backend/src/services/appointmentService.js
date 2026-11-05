@@ -942,7 +942,34 @@ class AppointmentService {
   }
 
   /**
-   * 2. Get Doctor 30-Minute Slots for a Specific Date
+   * 2a. Get Doctor Booked Slots for a Specific Date
+   * Capacity: ONLY active appointments where status IN ('PENDING', 'CONFIRMED')
+   * Excludes 'CANCELLED' appointments so freed slots are immediately available.
+   */
+  async getDoctorBookedSlots(doctorId, date) {
+    if (isConfigured && supabase) {
+      try {
+        const { data } = await supabase
+          .from('appointments')
+          .select('time_slot, status')
+          .eq('doctor_id', doctorId)
+          .eq('appointment_date', date)
+          .in('status', ['PENDING', 'CONFIRMED']);
+        if (data && data.length > 0) {
+          return data.map((a) => a.time_slot);
+        }
+      } catch (err) {
+        console.warn('Supabase getDoctorBookedSlots fallback:', err.message);
+      }
+    }
+
+    return store.appointments
+      .filter((a) => a.doctor_id === doctorId && a.appointment_date === date && (a.status === 'PENDING' || a.status === 'CONFIRMED'))
+      .map((a) => a.time_slot);
+  }
+
+  /**
+   * 2b. Get Doctor 30-Minute Slots for a Specific Date
    * Capacity: 1 patient per 30-minute slot
    */
   async getDoctorSlots(doctorId, date) {
@@ -954,11 +981,9 @@ class AppointmentService {
 
     const baseSlots = generate30MinSlots(doctor.visiting_time);
 
-    // Active appointments for this doctor on this date
-    const bookedApts = store.appointments.filter(
-      (a) => a.doctor_id === doctorId && a.appointment_date === date && a.status !== 'CANCELLED'
-    );
-    const bookedSlotTimes = new Set(bookedApts.map((a) => a.time_slot));
+    // Active appointments for this doctor on this date (PENDING or CONFIRMED only)
+    const bookedSlotList = await this.getDoctorBookedSlots(doctorId, date);
+    const bookedSlotTimes = new Set(bookedSlotList);
 
     return baseSlots.map((slotTime, idx) => {
       // Deterministic dummy booked slots (index 1 and index 4) to demonstrate realistic booked/unavailable slot state
@@ -1326,7 +1351,7 @@ class AppointmentService {
   }
 
   /**
-   * 8. Cancellation Logic with Automatic Online Refund Handling
+   * 8. Assistant Desk Cancellation Logic with Automatic Online Refund Handling
    * Restores slot by +1 and marks online payment as REFUNDED
    */
   async cancelAppointment(appointmentId, reason = 'সহকারী কর্তৃক বাতিলকৃত') {
@@ -1335,15 +1360,25 @@ class AppointmentService {
       throw new Error('অ্যাপয়েন্টমেন্ট পাওয়া যায়নি (Appointment not found).');
     }
 
+    if (apt.status === 'CANCELLED') {
+      const err = new Error('অ্যাপয়েন্টমেন্টটি ইতিমধ্যেই বাতিল করা হয়েছে (Appointment already cancelled).');
+      err.statusCode = 400;
+      throw err;
+    }
+
     const wasConfirmed = apt.status === 'CONFIRMED';
     const doctor = store.doctors.find((d) => d.id === apt.doctor_id);
 
-    if (wasConfirmed && doctor) {
-      doctor.available_slots += 1;
+    // CRITICAL: Always increment doctor's available slot when appointment is cancelled
+    if (doctor) {
+      doctor.available_slots = (doctor.available_slots || 0) + 1;
     }
 
+    const cancelledAt = new Date().toISOString();
     apt.status = 'CANCELLED';
     apt.cancellation_reason = reason;
+    apt.cancelled_by = 'ASSISTANT';
+    apt.cancelled_at = cancelledAt;
 
     // Automatic Online Payment Refund Processing
     const wasPaidOnline = apt.payment_status === 'PAID_ONLINE' || apt.payment_method === 'ONLINE_MFS';
@@ -1352,26 +1387,179 @@ class AppointmentService {
 
     if (wasPaidOnline) {
       apt.payment_status = 'REFUNDED';
-      apt.refund_processed_at = new Date().toISOString();
+      apt.refund_processed_at = cancelledAt;
       apt.refund_amount = apt.consultation_fee || doctor?.fee || 800;
       refundProcessed = true;
       refundAmount = apt.refund_amount;
     }
 
-    const patient = store.patients.find((p) => p.id === apt.patient_id);
+    const patient = store.patients.find((p) => p.id === apt.patient_id) || apt.patient;
+
+    // Supabase update if configured
+    if (isConfigured && supabase) {
+      try {
+        await supabase
+          .from('appointments')
+          .update({
+            status: 'CANCELLED',
+            cancellation_reason: reason,
+            cancelled_by: 'ASSISTANT',
+            cancelled_at: cancelledAt,
+            payment_status: apt.payment_status,
+            refund_amount: apt.refund_amount || null,
+            refund_processed_at: apt.refund_processed_at || null,
+          })
+          .eq('id', appointmentId);
+
+        if (doctor && doctor.id) {
+          await supabase
+            .from('doctors')
+            .update({ available_slots: doctor.available_slots })
+            .eq('id', doctor.id);
+        }
+      } catch (err) {
+        console.warn('Supabase cancelAppointment sync fallback:', err.message);
+      }
+    }
 
     const successMessage = refundProcessed
       ? `অ্যাপয়েন্টমেন্ট বাতিল করা হয়েছে এবং প্রদেয় ৳${refundAmount} রিফান্ড প্রসেস করা হয়েছে।`
-      : (wasConfirmed
-          ? 'অ্যাপয়েন্টমেন্ট বাতিল করা হয়েছে এবং ডাক্তারের স্লট ১ বৃদ্ধি পেয়েছে।'
-          : 'অ্যাপয়েন্টমেন্ট সফলভাবে বাতিল করা হয়েছে।');
+      : 'অ্যাপয়েন্টমেন্ট বাতিল করা হয়েছে এবং ডাক্তারের স্লট ১ বৃদ্ধি পেয়েছে।';
 
     return {
       success: true,
       message: successMessage,
       appointment: { ...apt, patient, doctor },
       updatedDoctor: doctor,
-      slotRestored: wasConfirmed,
+      slotRestored: true,
+      refundProcessed,
+      refundAmount,
+    };
+  }
+
+  /**
+   * 8b. Patient Self-Cancellation with Phone Verification & Slot Auto-Increment
+   * Allows patients to cancel their own appointments directly from Track Status portal
+   * Automatically frees the 30-minute time slot and increments available_slots by 1.
+   */
+  async patientCancelAppointment(appointmentId, { phone, reason } = {}) {
+    let apt = store.appointments.find((a) => a.id === appointmentId);
+    let patient = null;
+
+    if (isConfigured && supabase) {
+      try {
+        const { data } = await supabase
+          .from('appointments')
+          .select('*, patient:patients(*), doctor:doctors(*)')
+          .eq('id', appointmentId)
+          .single();
+        if (data) {
+          apt = data;
+          patient = data.patient;
+        }
+      } catch (err) {
+        console.warn('Supabase patientCancelAppointment lookup fallback:', err.message);
+      }
+    }
+
+    if (!apt) {
+      const err = new Error('অ্যাপয়েন্টমেন্ট পাওয়া যায়নি (Appointment not found).');
+      err.statusCode = 404;
+      throw err;
+    }
+
+    if (!patient) {
+      patient = store.patients.find((p) => p.id === apt.patient_id) || apt.patient;
+    }
+
+    // Phone verification
+    const normalizePhone = (p) => {
+      if (!p) return '';
+      const digits = p.toString().replace(/\D/g, '');
+      return digits.length > 11 ? digits.slice(-11) : digits;
+    };
+
+    const inputPhone = normalizePhone(phone);
+    const aptPhone = normalizePhone(patient?.phone || apt.phone || apt.patient_phone);
+
+    if (!inputPhone || !aptPhone || inputPhone !== aptPhone) {
+      const err = new Error('অননুমোদিত অনুরোধ: মোবাইল নম্বর মিলছে না (Unauthorized: Phone number does not match).');
+      err.statusCode = 403;
+      throw err;
+    }
+
+    if (apt.status === 'CANCELLED') {
+      const err = new Error('অ্যাপয়েন্টমেন্টটি ইতিমধ্যেই বাতিল করা হয়েছে (Appointment already cancelled).');
+      err.statusCode = 400;
+      throw err;
+    }
+
+    const doctor = store.doctors.find((d) => d.id === apt.doctor_id) || apt.doctor;
+
+    // CRITICAL: Increment doctor's available_slots += 1
+    if (doctor) {
+      doctor.available_slots = (doctor.available_slots || 0) + 1;
+    }
+
+    // Update appointment state
+    const cancellationReason = reason && reason.trim() ? reason.trim() : 'Patient self-cancellation';
+    const cancelledAt = new Date().toISOString();
+
+    apt.status = 'CANCELLED';
+    apt.cancellation_reason = cancellationReason;
+    apt.cancelled_by = 'PATIENT';
+    apt.cancelled_at = cancelledAt;
+
+    // Automatic Online Payment Refund Processing
+    const wasPaidOnline = apt.payment_status === 'PAID_ONLINE' || apt.payment_method === 'ONLINE_MFS';
+    let refundProcessed = false;
+    let refundAmount = 0;
+
+    if (wasPaidOnline) {
+      apt.payment_status = 'REFUNDED';
+      apt.refund_processed_at = cancelledAt;
+      apt.refund_amount = apt.consultation_fee || doctor?.fee || 800;
+      refundProcessed = true;
+      refundAmount = apt.refund_amount;
+    }
+
+    // Supabase update if configured
+    if (isConfigured && supabase) {
+      try {
+        await supabase
+          .from('appointments')
+          .update({
+            status: 'CANCELLED',
+            cancellation_reason: cancellationReason,
+            cancelled_by: 'PATIENT',
+            cancelled_at: cancelledAt,
+            payment_status: apt.payment_status,
+            refund_amount: apt.refund_amount || null,
+            refund_processed_at: apt.refund_processed_at || null,
+          })
+          .eq('id', appointmentId);
+
+        if (doctor && doctor.id) {
+          await supabase
+            .from('doctors')
+            .update({ available_slots: doctor.available_slots })
+            .eq('id', doctor.id);
+        }
+      } catch (err) {
+        console.warn('Supabase patientCancelAppointment sync fallback:', err.message);
+      }
+    }
+
+    const successMessage = refundProcessed
+      ? `অ্যাপয়েন্টমেন্ট সফলভাবে বাতিল করা হয়েছে এবং ৳${refundAmount} রিফান্ড প্রসেস করা হয়েছে। ডাক্তারের একটি স্লট উন্মুক্ত করা হয়েছে।`
+      : 'অ্যাপয়েন্টমেন্ট সফলভাবে বাতিল করা হয়েছে এবং সংশ্লিষ্ট ডাক্তারের স্লট পুনরায় উন্মুক্ত করা হয়েছে।';
+
+    return {
+      success: true,
+      message: successMessage,
+      appointment: { ...apt, patient, doctor },
+      updatedDoctor: doctor,
+      slotRestored: true,
       refundProcessed,
       refundAmount,
     };
@@ -1454,3 +1642,4 @@ class AppointmentService {
 
 module.exports = new AppointmentService();
 module.exports.generate30MinSlots = generate30MinSlots;
+module.exports.store = store;

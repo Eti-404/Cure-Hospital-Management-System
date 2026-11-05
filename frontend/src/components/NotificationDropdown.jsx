@@ -67,7 +67,7 @@ export default function NotificationDropdown({ onSelectSlipForPrint, onGoToTrack
             // markAllAsRead(); // or let user mark as read
           }
         }}
-        className={`relative p-2 sm:p-2.5 rounded-xl border transition-all cursor-pointer ${
+        className={`relative p-1.5 sm:p-2.5 rounded-xl border transition-all cursor-pointer shrink-0 ${
           isBellOpen
             ? 'bg-teal-800 text-white border-teal-500 shadow-xs'
             : 'bg-black/25 hover:bg-black/40 text-teal-200 hover:text-white border-white/15'
@@ -86,7 +86,7 @@ export default function NotificationDropdown({ onSelectSlipForPrint, onGoToTrack
 
       {/* Dropdown Pop-over Card */}
       {isBellOpen && (
-        <div className="absolute right-0 mt-2.5 w-80 sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200/90 text-slate-800 z-50 overflow-hidden animate-fade-in font-sans">
+        <div className="fixed inset-x-3 top-18 sm:top-full sm:mt-2.5 sm:absolute sm:inset-x-auto sm:right-0 w-auto sm:w-96 max-w-md mx-auto sm:mx-0 bg-white rounded-2xl shadow-2xl border border-slate-200/90 text-slate-800 z-50 overflow-hidden animate-fade-in font-sans">
           
           {/* Header */}
           <div className="bg-[#f0fdfa] px-4 py-3 border-b border-teal-100 flex items-center justify-between">

@@ -228,10 +228,55 @@ exports.cancelAppointment = async (req, res, next) => {
     const result = await appointmentService.cancelAppointment(id, reason);
     res.json(result);
   } catch (error) {
-    res.status(400).json({
+    res.status(error.statusCode || 400).json({
       success: false,
       message: error.message || 'অ্যাপয়েন্টমেন্ট বাতিল করতে ব্যর্থ হয়েছে।',
     });
+  }
+};
+
+/**
+ * 8b. Patient Portal: Self-Cancel Appointment
+ * PATCH /api/appointments/:id/patient-cancel
+ * Body: { phone, reason }
+ */
+exports.patientCancelAppointment = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { phone, reason } = req.body || {};
+
+    if (!phone) {
+      return res.status(400).json({
+        success: false,
+        message: 'যাচাইকরণের জন্য আপনার মোবাইল নম্বর প্রদান করুন (Please provide your phone number for verification).',
+      });
+    }
+
+    const result = await appointmentService.patientCancelAppointment(id, { phone, reason });
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(error.statusCode || 400).json({
+      success: false,
+      message: error.message || 'অ্যাপয়েন্টমেন্ট বাতিল করতে ব্যর্থ হয়েছে (Failed to cancel appointment).',
+    });
+  }
+};
+
+/**
+ * Slot Availability Check: Booked Slots
+ * GET /api/doctors/:id/booked-slots?date=...
+ */
+exports.getDoctorBookedSlots = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { date } = req.query;
+    const bookedSlots = await appointmentService.getDoctorBookedSlots(id, date);
+    res.json({
+      success: true,
+      bookedSlots,
+    });
+  } catch (error) {
+    next(error);
   }
 };
 

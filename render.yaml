@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: cure-hospital-management-system
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000

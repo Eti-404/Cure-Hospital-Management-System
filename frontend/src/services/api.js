@@ -90,6 +90,25 @@ export const api = {
     return data;
   },
 
+  // 8b. Patient Portal: Self-Cancel Appointment
+  async patientCancelAppointment(id, { phone, reason } = {}) {
+    const res = await fetch(`${API_BASE}/appointments/${id}/patient-cancel`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ phone, reason }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'অ্যাপয়েন্টমেন্ট বাতিল করতে ব্যর্থ হয়েছে।');
+    return data;
+  },
+
+  // Get booked slots for a doctor on a specific date
+  async getDoctorBookedSlots(doctorId, date) {
+    const res = await fetch(`${API_BASE}/doctors/${doctorId}/booked-slots?date=${encodeURIComponent(date)}`);
+    if (!res.ok) throw new Error('বুকড স্লট তালিকা পেতে সমস্যা হয়েছে।');
+    return res.json();
+  },
+
   // 9. Reset Demo Data for Presentation / Viva demonstration
   async resetDemo() {
     const res = await fetch(`${API_BASE}/demo/reset`, {

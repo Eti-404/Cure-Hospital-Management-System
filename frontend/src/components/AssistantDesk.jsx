@@ -418,80 +418,80 @@ export default function AssistantDesk({
       )}
       
       {/* 4 TOP STATUS STATS CARDS */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4">
         
         {/* 1. মোট আবেদন (Total) */}
         <button
           type="button"
           onClick={() => setActiveTab('ALL')}
-          className={`bg-white rounded-2xl p-5 border text-left transition-all duration-200 cursor-pointer shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] ${
+          className={`bg-white rounded-2xl p-3.5 sm:p-5 border text-left transition-all duration-200 cursor-pointer shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] ${
             activeTab === 'ALL'
               ? 'border-slate-800 ring-2 ring-slate-800/10 bg-slate-50/50 -translate-y-0.5'
               : 'border-slate-200/80 hover:border-slate-300 hover:shadow-md'
           }`}
         >
           <div className="flex items-center justify-between mb-1">
-            <span className="text-[14px] text-slate-500 font-bold">{t('statTotal')}</span>
+            <span className="text-xs sm:text-[14px] text-slate-500 font-bold">{t('statTotal')}</span>
             <ListFilter className="w-4 h-4 text-slate-400" />
           </div>
-          <span className="text-3xl font-black text-slate-900 block">{stats.total}</span>
-          <span className="text-[12px] text-slate-400 font-medium mt-1 block">{t('statTotalHint')}</span>
+          <span className="text-2xl sm:text-3xl font-black text-slate-900 block">{stats.total}</span>
+          <span className="text-[11px] sm:text-[12px] text-slate-400 font-medium mt-1 block truncate">{t('statTotalHint')}</span>
         </button>
 
         {/* 2. নিশ্চিতকৃত (Confirmed) */}
         <button
           type="button"
           onClick={() => setActiveTab('CONFIRMED')}
-          className={`bg-white rounded-2xl p-5 border text-left transition-all duration-200 cursor-pointer shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] ${
+          className={`bg-white rounded-2xl p-3.5 sm:p-5 border text-left transition-all duration-200 cursor-pointer shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] ${
             activeTab === 'CONFIRMED'
               ? 'border-teal-600 ring-2 ring-teal-500/20 bg-teal-50/30 -translate-y-0.5'
               : 'border-slate-200/80 hover:border-teal-300 hover:shadow-md'
           }`}
         >
           <div className="flex items-center justify-between mb-1">
-            <span className="text-[14px] text-teal-800 font-bold">{t('statConfirmed')}</span>
+            <span className="text-xs sm:text-[14px] text-teal-800 font-bold">{t('statConfirmed')}</span>
             <CheckCircle2 className="w-4 h-4 text-teal-600" />
           </div>
-          <span className="text-3xl font-black text-teal-600 block">{stats.confirmed}</span>
-          <span className="text-[12px] text-teal-700/80 font-medium mt-1 block">{t('statConfirmedHint')}</span>
+          <span className="text-2xl sm:text-3xl font-black text-teal-600 block">{stats.confirmed}</span>
+          <span className="text-[11px] sm:text-[12px] text-teal-700/80 font-medium mt-1 block truncate">{t('statConfirmedHint')}</span>
         </button>
 
         {/* 3. অপেক্ষমান (Pending) */}
         <button
           type="button"
           onClick={() => setActiveTab('PENDING')}
-          className={`bg-white rounded-2xl p-5 border text-left transition-all duration-200 cursor-pointer relative shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] ${
+          className={`bg-white rounded-2xl p-3.5 sm:p-5 border text-left transition-all duration-200 cursor-pointer relative shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] ${
             activeTab === 'PENDING'
               ? 'border-amber-500 ring-2 ring-amber-500/20 bg-amber-50/30 -translate-y-0.5'
               : 'border-slate-200/80 hover:border-amber-300 hover:shadow-md'
           }`}
         >
           <div className="flex items-center justify-between mb-1">
-            <span className="text-[14px] text-amber-800 font-bold">{t('statPending')}</span>
+            <span className="text-xs sm:text-[14px] text-amber-800 font-bold">{t('statPending')}</span>
             {stats.pending > 0 && (
               <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-ping"></span>
             )}
           </div>
-          <span className="text-3xl font-black text-amber-600 block">{stats.pending}</span>
-          <span className="text-[12px] text-amber-700/80 font-medium mt-1 block">{t('statPendingHint')}</span>
+          <span className="text-2xl sm:text-3xl font-black text-amber-600 block">{stats.pending}</span>
+          <span className="text-[11px] sm:text-[12px] text-amber-700/80 font-medium mt-1 block truncate">{t('statPendingHint')}</span>
         </button>
 
         {/* 4. বাতিলকৃত (Cancelled) */}
         <button
           type="button"
           onClick={() => setActiveTab('CANCELLED')}
-          className={`bg-white rounded-2xl p-5 border text-left transition-all duration-200 cursor-pointer shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] ${
+          className={`bg-white rounded-2xl p-3.5 sm:p-5 border text-left transition-all duration-200 cursor-pointer shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] ${
             activeTab === 'CANCELLED'
               ? 'border-rose-500 ring-2 ring-rose-500/20 bg-rose-50/30 -translate-y-0.5'
               : 'border-slate-200/80 hover:border-rose-300 hover:shadow-md'
           }`}
         >
           <div className="flex items-center justify-between mb-1">
-            <span className="text-[14px] text-rose-800 font-bold">{t('statCancelled')}</span>
+            <span className="text-xs sm:text-[14px] text-rose-800 font-bold">{t('statCancelled')}</span>
             <XCircle className="w-4 h-4 text-rose-600" />
           </div>
-          <span className="text-3xl font-black text-rose-600 block">{stats.cancelled}</span>
-          <span className="text-[12px] text-rose-700/80 font-medium mt-1 block">{t('statCancelledHint')}</span>
+          <span className="text-2xl sm:text-3xl font-black text-rose-600 block">{stats.cancelled}</span>
+          <span className="text-[11px] sm:text-[12px] text-rose-700/80 font-medium mt-1 block truncate">{t('statCancelledHint')}</span>
         </button>
 
       </div>
@@ -500,20 +500,20 @@ export default function AssistantDesk({
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         
         {/* Action Tabs */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar flex-nowrap sm:flex-wrap pb-1 max-w-full">
           
           <button
             type="button"
             onClick={() => setActiveTab('ALL')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[14px] sm:text-[15px] font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-[14px] font-bold transition-all cursor-pointer shrink-0 ${
               activeTab === 'ALL'
                 ? 'bg-slate-900 text-white shadow-xs'
                 : 'bg-white hover:bg-slate-100 text-slate-600 border border-slate-200/80'
             }`}
           >
-            <ListFilter className="w-4 h-4" />
+            <ListFilter className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             <span>{t('tabAll')}</span>
-            <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+            <span className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold ${
               activeTab === 'ALL' ? 'bg-slate-700 text-white' : 'bg-slate-100 text-slate-700'
             }`}>
               {stats.total}
@@ -523,15 +523,15 @@ export default function AssistantDesk({
           <button
             type="button"
             onClick={() => setActiveTab('PENDING')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[14px] sm:text-[15px] font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-[14px] font-bold transition-all cursor-pointer shrink-0 ${
               activeTab === 'PENDING'
                 ? 'bg-amber-100 text-amber-900 border border-amber-300 shadow-xs'
                 : 'bg-white hover:bg-slate-100 text-slate-600 border border-slate-200/80'
             }`}
           >
-            <Clock className="w-4 h-4 text-amber-600" />
+            <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600" />
             <span>{t('tabPending')}</span>
-            <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+            <span className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold ${
               activeTab === 'PENDING' ? 'bg-amber-500 text-white' : 'bg-slate-100 text-slate-700'
             }`}>
               {stats.pending}
@@ -541,15 +541,15 @@ export default function AssistantDesk({
           <button
             type="button"
             onClick={() => setActiveTab('CONFIRMED')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[14px] sm:text-[15px] font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-[14px] font-bold transition-all cursor-pointer shrink-0 ${
               activeTab === 'CONFIRMED'
                 ? 'bg-teal-100 text-teal-900 border border-teal-300 shadow-xs'
                 : 'bg-white hover:bg-slate-100 text-slate-600 border border-slate-200/80'
             }`}
           >
-            <CheckCircle2 className="w-4 h-4 text-teal-600" />
+            <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-teal-600" />
             <span>{t('tabConfirmed')}</span>
-            <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+            <span className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold ${
               activeTab === 'CONFIRMED' ? 'bg-teal-600 text-white' : 'bg-slate-100 text-slate-700'
             }`}>
               {stats.confirmed}
@@ -559,15 +559,15 @@ export default function AssistantDesk({
           <button
             type="button"
             onClick={() => setActiveTab('CANCELLED')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[14px] sm:text-[15px] font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-[14px] font-bold transition-all cursor-pointer shrink-0 ${
               activeTab === 'CANCELLED'
                 ? 'bg-rose-100 text-rose-900 border border-rose-300 shadow-xs'
                 : 'bg-white hover:bg-slate-100 text-slate-600 border border-slate-200/80'
             }`}
           >
-            <XCircle className="w-4 h-4 text-rose-600" />
+            <XCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-600" />
             <span>{t('tabCancelled')}</span>
-            <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+            <span className={`px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold ${
               activeTab === 'CANCELLED' ? 'bg-rose-600 text-white' : 'bg-slate-100 text-slate-700'
             }`}>
               {stats.cancelled}
@@ -578,13 +578,13 @@ export default function AssistantDesk({
           <button
             type="button"
             onClick={() => setActiveTab('WALKIN')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[14px] sm:text-[15px] font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-[14px] font-bold transition-all cursor-pointer shrink-0 ${
               activeTab === 'WALKIN'
                 ? 'bg-teal-700 text-white shadow-xs'
                 : 'bg-white hover:bg-slate-100 text-teal-800 border border-teal-200'
             }`}
           >
-            <UserPlus className="w-4 h-4 text-teal-600" />
+            <UserPlus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-teal-600" />
             <span>{t('tabWalkIn')}</span>
           </button>
 
@@ -592,13 +592,13 @@ export default function AssistantDesk({
           <button
             type="button"
             onClick={() => setActiveTab('DOCTORS')}
-            className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-[14px] sm:text-[15px] font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs sm:text-[14px] font-bold transition-all cursor-pointer shrink-0 ${
               activeTab === 'DOCTORS'
                 ? 'bg-teal-700 text-white shadow-xs'
                 : 'bg-white hover:bg-slate-100 text-teal-800 border border-teal-200'
             }`}
           >
-            <Stethoscope className="w-4 h-4 text-teal-600" />
+            <Stethoscope className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-teal-600" />
             <span>{t('tabDoctors')} ({doctors.length})</span>
           </button>
 
@@ -606,21 +606,21 @@ export default function AssistantDesk({
 
         {/* Filter and Search Bar */}
         {(activeTab === 'ALL' || activeTab === 'PENDING' || activeTab === 'CONFIRMED' || activeTab === 'CANCELLED') && (
-          <form onSubmit={handleSearchSubmit} className="flex items-center gap-2">
-            <div className="relative">
+          <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 w-full sm:w-auto">
+            <div className="relative flex-1 sm:w-72">
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t('searchPlaceholder')}
-                className="pl-9 pr-4 py-2 rounded-xl border border-slate-200 bg-white focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 outline-none text-[15px] text-slate-800 transition-all w-60 sm:w-72"
+                className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-200 bg-white focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 outline-none text-xs sm:text-[15px] text-slate-800 transition-all"
               />
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
             </div>
 
             <button
               type="submit"
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-[14px] font-semibold transition-colors cursor-pointer"
+              className="px-3.5 sm:px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs sm:text-[14px] font-semibold transition-colors cursor-pointer shrink-0"
             >
               {t('searchBtn')}
             </button>
@@ -628,7 +628,7 @@ export default function AssistantDesk({
             <button
               type="button"
               onClick={fetchAppointments}
-              className="p-2 text-slate-500 hover:text-slate-800 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl transition-colors cursor-pointer"
+              className="p-2 text-slate-500 hover:text-slate-800 bg-white hover:bg-slate-100 border border-slate-200 rounded-xl transition-colors cursor-pointer shrink-0"
               title="Refresh"
             >
               <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin text-teal-600' : ''}`} />
@@ -1051,14 +1051,14 @@ export default function AssistantDesk({
                 return (
                   <div
                     key={apt.id}
-                    className="p-6 hover:bg-slate-50/50 transition-colors"
+                    className="p-4 sm:p-6 hover:bg-slate-50/50 transition-colors"
                   >
-                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 sm:gap-5">
                       
                       {/* Left: Patient Details */}
-                      <div className="space-y-1.5">
+                      <div className="space-y-1.5 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className={`inline-flex items-center gap-1.5 px-3 py-0.5 rounded-lg text-[13px] font-bold ${
+                          <span className={`inline-flex items-center gap-1.5 px-3 py-0.5 rounded-lg text-xs sm:text-[13px] font-bold ${
                             isPending
                               ? 'bg-amber-100 text-amber-800'
                               : isConfirmed
@@ -1086,14 +1086,14 @@ export default function AssistantDesk({
                           )}
 
                           {apt.token_id && (
-                            <span className="px-2.5 py-0.5 rounded-md text-[13px] font-mono font-bold bg-slate-900 text-white">
+                            <span className="px-2.5 py-0.5 rounded-md text-xs sm:text-[13px] font-mono font-bold bg-slate-900 text-white">
                               {t('tokenLabel')}: {apt.token_id}
                             </span>
                           )}
 
                           {/* Payment badge (Only if not cancelled or counter payment) */}
                           {(!isCancelled || (apt.payment_status !== 'REFUNDED' && !isPaidOnline)) && (
-                            <span className={`px-2.5 py-0.5 rounded-md text-[12px] font-bold ${
+                            <span className={`px-2.5 py-0.5 rounded-md text-[11px] sm:text-[12px] font-bold ${
                               isPaidOnline 
                                 ? 'bg-teal-100 text-teal-800 border border-teal-200' 
                                 : 'bg-amber-50 text-amber-900 border border-amber-200'
@@ -1104,15 +1104,15 @@ export default function AssistantDesk({
                         </div>
 
                         <div className="flex items-center gap-2 pt-1">
-                          <h4 className="text-[18px] font-bold text-slate-900">
+                          <h4 className="text-[17px] sm:text-[18px] font-bold text-slate-900 break-words">
                             {apt.patient?.full_name || 'রোগীর নাম'}
                           </h4>
-                          <span className="text-[14px] text-slate-500 font-medium">
+                          <span className="text-xs sm:text-[14px] text-slate-500 font-medium">
                             ({apt.patient?.age} {lang === 'bn' ? 'বছর' : 'yrs'}, {apt.patient?.gender})
                           </span>
                         </div>
 
-                        <div className="flex items-center gap-4 text-[14px] text-slate-500">
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-[14px] text-slate-500">
                           <span className="flex items-center gap-1 font-mono">
                             <Phone className="w-3.5 h-3.5 text-slate-400" />
                             {apt.patient?.phone}
@@ -1128,7 +1128,7 @@ export default function AssistantDesk({
                         </div>
 
                         {apt.symptoms && (
-                          <p className="text-[13px] text-slate-500 pt-1">
+                          <p className="text-xs sm:text-[13px] text-slate-500 pt-1">
                             <span className="font-semibold text-slate-600">{lang === 'bn' ? 'লক্ষণ / নোট: ' : 'Symptoms/Notes: '}</span>
                             {apt.symptoms}
                           </p>
@@ -1136,14 +1136,14 @@ export default function AssistantDesk({
                       </div>
 
                       {/* Middle: Doctor Details & Chamber Room */}
-                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 lg:w-72 space-y-1">
-                        <div className="text-[12px] font-semibold text-slate-400 uppercase tracking-wider">
+                      <div className="bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-100 w-full lg:w-72 space-y-1">
+                        <div className="text-[11px] sm:text-[12px] font-semibold text-slate-400 uppercase tracking-wider">
                           {t('tableDoctor')}
                         </div>
-                        <p className="font-bold text-slate-900 text-[15px] truncate">
+                        <p className="font-bold text-slate-900 text-[14px] sm:text-[15px] truncate">
                           {apt.doctor?.name || 'ডাক্তার'}
                         </p>
-                        <p className="text-[13px] text-slate-600">
+                        <p className="text-xs sm:text-[13px] text-slate-600">
                           {apt.doctor?.department} | {t('room')}: {apt.doctor?.room_no}
                         </p>
                         <p className="text-xs text-teal-700 font-bold pt-1">
@@ -1152,7 +1152,7 @@ export default function AssistantDesk({
                       </div>
 
                       {/* Right: 1-Click Action Buttons */}
-                      <div className="flex items-center gap-2 flex-wrap">
+                      <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto pt-2 lg:pt-0">
                         
                         {/* 1-Click Confirm Button */}
                         {isPending && (
@@ -1160,7 +1160,7 @@ export default function AssistantDesk({
                             type="button"
                             onClick={() => handleConfirm(apt)}
                             disabled={isActionRunning}
-                            className="flex items-center gap-1.5 px-4 py-2.5 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold text-[14px] rounded-xl shadow-xs transition-all hover:scale-[1.02] cursor-pointer"
+                            className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 sm:px-4 py-2 sm:py-2.5 bg-teal-600 hover:bg-teal-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold text-xs sm:text-[14px] rounded-xl shadow-xs transition-all hover:scale-[1.02] cursor-pointer"
                             title={lang === 'bn' ? 'অ্যাপয়েন্টমেন্ট কনফার্ম করুন ও টোকেন ইস্যু করুন' : 'Confirm and issue token'}
                           >
                             {isActionRunning ? (
@@ -1178,7 +1178,7 @@ export default function AssistantDesk({
                             type="button"
                             onClick={() => handleCancel(apt)}
                             disabled={isActionRunning}
-                            className="flex items-center gap-1 px-3.5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold text-[14px] rounded-xl transition-colors cursor-pointer"
+                            className="flex-1 sm:flex-initial flex items-center justify-center gap-1 px-3 sm:px-3.5 py-2 sm:py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold text-xs sm:text-[14px] rounded-xl transition-colors cursor-pointer"
                             title={lang === 'bn' ? 'অ্যাপয়েন্টমেন্ট বাতিল করুন' : 'Cancel appointment'}
                           >
                             {isActionRunning ? (
@@ -1195,7 +1195,7 @@ export default function AssistantDesk({
                           <button
                             type="button"
                             onClick={() => onSelectSlipForPrint(apt)}
-                            className="flex items-center gap-1.5 px-3.5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-[14px] rounded-xl shadow-xs transition-all hover:scale-[1.02] cursor-pointer"
+                            className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3 sm:px-3.5 py-2 sm:py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs sm:text-[14px] rounded-xl shadow-xs transition-all hover:scale-[1.02] cursor-pointer"
                             title={lang === 'bn' ? 'ডিজিটাল স্লিপ প্রিন্ট করুন' : 'Print Token Slip'}
                           >
                             <Printer className="w-4 h-4" />

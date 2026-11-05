@@ -12,6 +12,7 @@ const appointmentController = require('../controllers/appointmentController');
 // Doctor endpoints
 router.get('/doctors', appointmentController.getDoctors);
 router.get('/doctors/:id/slots', appointmentController.getDoctorSlots);
+router.get('/doctors/:id/booked-slots', appointmentController.getDoctorBookedSlots);
 router.post('/doctors', appointmentController.addDoctor);
 router.delete('/doctors/:id', appointmentController.deleteDoctor);
 
@@ -25,6 +26,7 @@ router.get('/appointments', appointmentController.getAppointments);
 router.get('/appointments/track', appointmentController.trackAppointments);
 router.patch('/appointments/:id/confirm', appointmentController.confirmAppointment);
 router.patch('/appointments/:id/cancel', appointmentController.cancelAppointment);
+router.patch('/appointments/:id/patient-cancel', appointmentController.patientCancelAppointment);
 
 // Demo helper
 router.post('/demo/reset', appointmentController.resetDemo);

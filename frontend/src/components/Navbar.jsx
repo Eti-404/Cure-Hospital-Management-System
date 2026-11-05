@@ -89,22 +89,22 @@ export default function Navbar({
 
   return (
     <header className="sticky top-0 z-40 bg-[#0f766e]/95 backdrop-blur-md text-white border-b border-teal-800/60 shadow-md no-print select-none transition-colors">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20 gap-2 sm:gap-4">
+      <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-20 gap-1.5 sm:gap-4">
           
           {/* Left: Brand Identity with Google Translate Protection (Clickable Home) */}
           <div 
             onClick={onGoHome}
-            className="flex items-center gap-2.5 sm:gap-3 cursor-pointer group shrink-0"
+            className="flex items-center gap-2 sm:gap-3 cursor-pointer group shrink-0 min-w-0"
             title={lang === 'bn' ? 'হোমপেজে ফিরে যান' : 'Back to Home'}
           >
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-teal-300 group-hover:bg-cyan-300 flex items-center justify-center text-slate-950 shadow-sm shrink-0 transition-all duration-200">
-              <Stethoscope className="w-5 h-5 stroke-[2.4]" />
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-teal-300 group-hover:bg-cyan-300 flex items-center justify-center text-slate-950 shadow-sm shrink-0 transition-all duration-200">
+              <Stethoscope className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.4]" />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col min-w-0">
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <span 
-                  className="text-lg sm:text-2xl font-black tracking-tight text-white notranslate group-hover:text-teal-200 transition-colors" 
+                  className="text-base sm:text-2xl font-black tracking-tight text-white notranslate group-hover:text-teal-200 transition-colors truncate" 
                   translate="no"
                 >
                   {lang === 'bn' ? 'কিওর হসপিটাল' : 'Cure Hospital'}
@@ -159,26 +159,27 @@ export default function Navbar({
           )}
 
           {/* Right Area: Language Switcher, Notification Bell & Smart Auth Hover Dropdowns */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1 sm:gap-3 shrink-0">
             
             {/* 1. Language Switcher [ বাংলা | EN ] (Frosted Glass Translucent Pill) */}
-            <div className="bg-black/25 backdrop-blur-md p-0.5 sm:p-1 rounded-full flex items-center border border-white/15">
+            <div className="bg-black/25 backdrop-blur-md p-0.5 sm:p-1 rounded-full flex items-center border border-white/15 shrink-0">
               <button
                 type="button"
                 onClick={() => setLang('bn')}
-                className={`px-2.5 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                className={`px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-[11px] sm:text-xs font-bold transition-all cursor-pointer ${
                   lang === 'bn'
                     ? 'bg-white text-teal-950 font-black shadow-xs'
                     : 'text-teal-200 hover:text-white'
                 }`}
                 title="বাংলা ভাষায় দেখুন"
               >
-                বাংলা
+                <span className="hidden xs:inline">বাংলা</span>
+                <span className="xs:hidden">বাং</span>
               </button>
               <button
                 type="button"
                 onClick={() => setLang('en')}
-                className={`px-2.5 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                className={`px-2 py-0.5 sm:px-3 sm:py-1 rounded-full text-[11px] sm:text-xs font-bold transition-all cursor-pointer ${
                   lang === 'en'
                     ? 'bg-white text-teal-950 font-black shadow-xs'
                     : 'text-teal-200 hover:text-white'
@@ -208,26 +209,26 @@ export default function Navbar({
                   setPatientMenuOpen((prev) => !prev);
                   setAssistantMenuOpen(false);
                 }}
-                className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full text-xs sm:text-[13px] font-bold transition-all duration-200 cursor-pointer border ${
+                className={`flex items-center gap-1 sm:gap-2 px-2 py-1 sm:px-3.5 sm:py-2 rounded-full text-xs sm:text-[13px] font-bold transition-all duration-200 cursor-pointer border shrink-0 ${
                   activeMode === 'patient'
                     ? 'bg-teal-300 text-slate-950 border-teal-200 font-extrabold shadow-xs hover:bg-teal-200'
                     : 'bg-black/25 text-white border-white/15 hover:bg-black/40 hover:border-white/30'
                 }`}
                 title={lang === 'bn' ? 'পেশেন্ট মেনু' : 'Patient Menu'}
               >
-                <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-current" />
-                <span className="max-w-[90px] sm:max-w-[120px] truncate">
+                <User className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-current shrink-0" />
+                <span className="hidden xs:inline max-w-[70px] sm:max-w-[120px] truncate">
                   {patientUser ? patientUser.name : (lang === 'bn' ? 'পেশেন্ট' : 'Patient')}
                 </span>
-                <ChevronDown className={`w-3.5 h-3.5 opacity-70 transition-transform duration-200 ${patientMenuOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-3 h-3 sm:w-3.5 sm:h-3.5 opacity-70 transition-transform duration-200 ${patientMenuOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {/* Patient Dropdown Card */}
               {patientMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-white rounded-2xl shadow-[0_15px_40px_-5px_rgba(0,0,0,0.25)] border border-slate-200 p-4 z-50 text-slate-800 animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="fixed inset-x-3 top-18 sm:top-full sm:mt-2 sm:absolute sm:inset-x-auto sm:right-0 w-auto sm:w-80 max-w-md mx-auto sm:mx-0 bg-white rounded-2xl shadow-[0_15px_40px_-5px_rgba(0,0,0,0.25)] border border-slate-200 p-4 z-50 text-slate-800 animate-in fade-in slide-in-from-top-2 duration-150">
                   
                   {/* Subtle top arrow caret */}
-                  <div className="absolute -top-1.5 right-6 w-3 h-3 bg-white border-t border-l border-slate-200 transform rotate-45"></div>
+                  <div className="hidden sm:block absolute -top-1.5 right-6 w-3 h-3 bg-white border-t border-l border-slate-200 transform rotate-45"></div>
 
                   {patientUser ? (
                     /* LOGGED IN PATIENT STATE */
@@ -379,18 +380,20 @@ export default function Navbar({
                   setAssistantMenuOpen((prev) => !prev);
                   setPatientMenuOpen(false);
                 }}
-                className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-full text-xs sm:text-[13px] font-bold transition-all duration-200 cursor-pointer border relative ${
+                className={`flex items-center gap-1 sm:gap-2 px-2 py-1 sm:px-3.5 sm:py-2 rounded-full text-xs sm:text-[13px] font-bold transition-all duration-200 cursor-pointer border relative shrink-0 ${
                   activeMode === 'assistant'
                     ? 'bg-teal-300 text-slate-950 border-teal-200 font-extrabold shadow-xs hover:bg-teal-200'
                     : 'bg-black/25 text-white border-white/15 hover:bg-black/40 hover:border-white/30'
                 }`}
                 title={lang === 'bn' ? 'সহকারী ডেস্ক' : 'Assistant Desk'}
               >
-                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-current" />
-                <span className="hidden xs:inline">
+                <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-current shrink-0" />
+                <span className="hidden md:inline">
                   {lang === 'bn' ? 'সহকারী ডেস্ক' : 'Assistant Desk'}
                 </span>
-                <span className="xs:hidden">ডেস্ক</span>
+                <span className="hidden xs:inline md:hidden">
+                  {lang === 'bn' ? 'ডেস্ক' : 'Desk'}
+                </span>
 
                 {pendingCount > 0 && (
                   <span className={`inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] sm:text-xs font-black leading-none rounded-full ${
@@ -400,15 +403,15 @@ export default function Navbar({
                   </span>
                 )}
 
-                <ChevronDown className={`w-3.5 h-3.5 opacity-70 transition-transform duration-200 ${assistantMenuOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-3 h-3 sm:w-3.5 sm:h-3.5 opacity-70 transition-transform duration-200 ${assistantMenuOpen ? 'rotate-180' : ''}`} />
               </button>
 
               {/* Assistant Desk Dropdown Card */}
               {assistantMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 w-72 sm:w-80 bg-white rounded-2xl shadow-[0_15px_40px_-5px_rgba(0,0,0,0.25)] border border-slate-200 p-4 z-50 text-slate-800 animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="fixed inset-x-3 top-18 sm:top-full sm:mt-2 sm:absolute sm:inset-x-auto sm:right-0 w-auto sm:w-80 max-w-md mx-auto sm:mx-0 bg-white rounded-2xl shadow-[0_15px_40px_-5px_rgba(0,0,0,0.25)] border border-slate-200 p-4 z-50 text-slate-800 animate-in fade-in slide-in-from-top-2 duration-150">
                   
                   {/* Subtle top arrow caret */}
-                  <div className="absolute -top-1.5 right-6 w-3 h-3 bg-white border-t border-l border-slate-200 transform rotate-45"></div>
+                  <div className="hidden sm:block absolute -top-1.5 right-6 w-3 h-3 bg-white border-t border-l border-slate-200 transform rotate-45"></div>
 
                   {isAssistantLoggedIn ? (
                     /* LOGGED IN ASSISTANT STATE */
